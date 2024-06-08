@@ -396,7 +396,7 @@ void write_inode_table(int fd) {
 	struct ext2_inode hello_inode = {0};
 	hello_inode.i_mode = EXT2_S_IFLNK | EXT2_S_IRUSR | EXT2_S_IWUSR | EXT2_S_IRGRP | EXT2_S_IROTH;
 	hello_inode.i_uid = 1000;
-	hello_inode.i_size = 12; //maybe change
+	hello_inode.i_size = strlen("hello-world");
 	hello_inode.i_atime = current_time;
 	hello_inode.i_ctime = current_time;
 	hello_inode.i_mtime = current_time;
@@ -475,7 +475,7 @@ void write_hello_world_file_block(int fd)		//done
 
     const char *data = "Hello world\n";
     ssize_t bytes_written = write(fd, data, 12);
-    if (bytes_written == -1) {
+    if (bytes_written != 12) {
         errno_exit("write");
     }
 
