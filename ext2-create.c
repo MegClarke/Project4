@@ -283,10 +283,9 @@ void write_block_bitmap(int fd)
 	}
 
 	// TODO It's all yours
-	u8 map_value[BLOCK_SIZE];
-	memset(map_value, 0x00, BLOCK_SIZE);
+	u8 map_value[BLOCK_SIZE] = {0x00};
 
-	for (int i = 1; i <= LAST_BLOCK; ++i) {
+	for (u32 i = 1; i <= LAST_BLOCK; i++) {
         map_value[(i - 1)/ 8] |= (1 << ((i - 1)% 8));
     }
 
