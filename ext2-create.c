@@ -309,11 +309,16 @@ void write_inode_bitmap(int fd)
 	}
 
 	// TODO It's all yours
-	u8 map_value[BLOCK_SIZE] = {0};
-	map_value[(EXT2_ROOT_INO - 1) / 8] |= (1 << ((EXT2_ROOT_INO - 1) % 8));
-	map_value[(LOST_AND_FOUND_INO-1) / 8] |= (1 << ((LOST_AND_FOUND_INO - 1) % 8));
-	map_value[(HELLO_WORLD_INO - 1) / 8] |= (1 << ((HELLO_WORLD_INO - 1) % 8));
-	map_value[(HELLO_INO - 1)/ 8] |= (1 << ((HELLO_INO - 1) % 8));
+	u8 map_value[BLOCK_SIZE] = {0x00};
+
+	for (u32 i = 1; i <= LAST_INO; i++) {
+        map_value[(i - 1)/ 8] |= (1 << ((i - 1)% 8));
+    }
+
+    // Clear the bits for inodes after the valid range
+    for (u32 i = NUM_INODES + 1; i <= BLOCK_SIZE * 8; i++) {
+        map_value[(i - 1)/ 8] |= (1 << ((i - 1)% 8));
+    }
 
 	if (write(fd, map_value, BLOCK_SIZE) != BLOCK_SIZE)
 	{
