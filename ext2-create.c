@@ -453,7 +453,7 @@ void write_hello_world_file_block(int fd)		//done
     const char *data = "Hello world\n";
     ssize_t bytes_written = write(fd, data, 12);
     if (bytes_written == -1) {
-        errno_exit("write")
+        errno_exit("write");
     }
 
 }
