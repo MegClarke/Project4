@@ -284,13 +284,13 @@ void write_block_bitmap(int fd)
 
 	// TODO It's all yours
 	u8 map_value[BLOCK_SIZE];
-	memset(map_value, 0xFF, BLOCK_SIZE);
+	memset(map_value, 0x00, BLOCK_SIZE);
 
- 	for (int i = 24; i <= 1024; ++i) {
-        map_value[(i - 1)/ 8] &= ~(1 << ((i - 1)% 8));
+	for (int i = 0; i <= LAST_BLOCK; ++i) {
+        map_value[(i - 1)/ 8] |= (1 << ((i - 1)% 8));
     }
 	
-	if (write(fd, map_value, sizeof(map_value)) != BLOCK_SIZE)
+	if (write(fd, map_value, BLOCK_SIZE) != BLOCK_SIZE)
 	{
 		errno_exit("write");
 	}
