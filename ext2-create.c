@@ -388,7 +388,7 @@ void write_inode_table(int fd) {
 	hello_world_inode.i_dtime = 0;
 	hello_world_inode.i_gid = 1000;
 	hello_world_inode.i_links_count = 1;
-	hello_world_inode.i_blocks = 2; /* These are oddly 512 blocks */
+	hello_world_inode.i_blocks = 0; /* These are oddly 512 blocks */
 	root_inode.i_block[0] = HELLO_WORLD_FILE_BLOCKNO;
 	write_inode(fd, HELLO_WORLD_INO, &hello_world_inode);
 
@@ -427,6 +427,13 @@ void write_root_dir_block(int fd) //done
     dir_entry_set(parent_entry, EXT2_ROOT_INO, "..");
     parent_entry.rec_len = bytes_remaining;
 	dir_entry_write(parent_entry, fd);
+
+	bytes_remaining -= parent_entry.rec_len;
+
+    struct ext2_dir_entry lost_and_found_entry = {0};
+    dir_entry_set(lost_and_found_entry, LOST_AND_FOUND_INO, "lost+found");
+    lost_and_found_entry.rec_len = bytes_remaining;
+    dir_entry_write(lost_and_found_entry, fd);
 }
 
 void write_lost_and_found_dir_block(int fd) {
