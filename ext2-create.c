@@ -283,7 +283,16 @@ void write_block_bitmap(int fd)
 	}
 
 	// TODO It's all yours
-	u8 map_value[BLOCK_SIZE];
+	u8 map_value[BLOCK_SIZE] = {0};
+
+ 	map_value[SUPERBLOCK_BLOCKNO / 8] |= (1 << (SUPERBLOCK_BLOCKNO % 8));
+	map_value[BLOCK_GROUP_DESCRIPTOR_BLOCKNO / 8] |= (1 << (BLOCK_GROUP_DESCRIPTOR_BLOCKNO % 8));
+	map_value[BLOCK_BITMAP_BLOCKNO / 8] |= (1 << (BLOCK_BITMAP_BLOCKNO % 8));
+	map_value[INODE_BITMAP_BLOCKNO / 8] |= (1 << (INODE_BITMAP_BLOCKNO % 8));
+	map_value[INODE_TABLE_BLOCKNO / 8] |= (1 << (INODE_TABLE_BLOCKNO % 8));
+	map_value[ROOT_DIR_BLOCKNO / 8] |= (1 << (ROOT_DIR_BLOCKNO % 8));
+	map_value[HELLO_WORLD_FILE_BLOCKNO / 8] |= (1 << (HELLO_WORLD_FILE_BLOCKNO % 8));
+
 
 	if (write(fd, map_value, BLOCK_SIZE) != BLOCK_SIZE)
 	{
@@ -300,7 +309,11 @@ void write_inode_bitmap(int fd)
 	}
 
 	// TODO It's all yours
-	u8 map_value[BLOCK_SIZE];
+	u8 map_value[BLOCK_SIZE] = {0};
+	map_value[EXT2_ROOT_INO / 8] |= (1 << (EXT2_ROOT_INO % 8));
+	map_value[LOST_AND_FOUND_IN0 / 8] |= (1 << (LOST_AND_FOUND_INO % 8));
+	map_value[HELLO_WORLD_INO / 8] |= (1 << (HELLO_WORLD_INO % 8));
+	map_value[HELLO_INO / 8] |= (1 << (HELLO_INO % 8));
 
 	if (write(fd, map_value, BLOCK_SIZE) != BLOCK_SIZE)
 	{
