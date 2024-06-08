@@ -283,17 +283,12 @@ void write_block_bitmap(int fd)
 	}
 
 	// TODO It's all yours
-	u8 map_value[BLOCK_SIZE] = {0};
+	u8 map_value[BLOCK_SIZE] = {1};
 
- 	map_value[(SUPERBLOCK_BLOCKNO - 1)/ 8] |= (1 << ((SUPERBLOCK_BLOCKNO - 1) % 8));
-	map_value[(BLOCK_GROUP_DESCRIPTOR_BLOCKNO - 1)/ 8] |= (1 << ((BLOCK_GROUP_DESCRIPTOR_BLOCKNO - 1) % 8));
-	map_value[(BLOCK_BITMAP_BLOCKNO - 1)/ 8] |= (1 << ((BLOCK_BITMAP_BLOCKNO - 1) % 8));
-	map_value[(INODE_BITMAP_BLOCKNO - 1)/ 8] |= (1 << ((INODE_BITMAP_BLOCKNO - 1) % 8));
-	map_value[(INODE_TABLE_BLOCKNO - 1)/ 8] |= (1 << ((INODE_TABLE_BLOCKNO - 1) % 8));
-	map_value[(ROOT_DIR_BLOCKNO - 1)/ 8] |= (1 << ((ROOT_DIR_BLOCKNO - 1) % 8));
-	map_value[(HELLO_WORLD_FILE_BLOCKNO - 1)/ 8] |= (1 << ((HELLO_WORLD_FILE_BLOCKNO - 1) % 8));
-
-
+ 	for (int i = 24; i < 1024; ++i) {
+        map_value[(i - 1) / 8] &= ~(1 << ((i - 1) % 8));
+    }
+	
 	if (write(fd, map_value, BLOCK_SIZE) != BLOCK_SIZE)
 	{
 		errno_exit("write");
