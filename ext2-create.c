@@ -266,7 +266,7 @@ void write_block_group_descriptor_table(int fd) {
 	block_group_descriptor.bg_inode_table = INODE_TABLE_BLOCKNO;
 	block_group_descriptor.bg_free_blocks_count = NUM_FREE_BLOCKS;
 	block_group_descriptor.bg_free_inodes_count = NUM_FREE_INODES;
-	block_group_descriptor.bg_used_dirs_count = -1;
+	block_group_descriptor.bg_used_dirs_count = 2;
 
 	ssize_t size = sizeof(block_group_descriptor);
 	if (write(fd, &block_group_descriptor, size) != size) {
@@ -352,7 +352,22 @@ void write_inode_table(int fd) {
 
 void write_root_dir_block(int fd)
 {
-	// TODO It's all yours
+	off_t off = lseek(fd, BLOCK_OFFSET(ROOT_DIR_BLOCKNO), SEEK_SET);
+    if (off == -1) {
+        errno_exit("lseek");
+    }
+
+    struct ext2_dir_entry current = {0}; /
+    dir_entry_set(current, EXT2_ROOT_INO, ".");
+   
+    struct ext2_dir_entry parent = {0};
+    dir_entry_set(parent, EXT2_ROOT_INO, "..");
+
+    parent.rec_len = BLOCK_SIZE - current.rec_len;
+
+    // Write the directory entries to the file
+    dir_entry_write(current, fd);
+    dir_entry_write(parent, fd);
 }
 
 void write_lost_and_found_dir_block(int fd) {
