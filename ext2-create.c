@@ -290,7 +290,7 @@ void write_block_bitmap(int fd)
         map_value[(i - 1)/ 8] |= (1 << ((i - 1)% 8));
     }
 
-	for (u32 i = 1024; i <= NUM_BLOCKS * 8; i++) {
+	for (u32 i = NUM_INODES * 8; i <= NUM_BLOCKS * 8; i++) {
         map_value[(i - 1)/ 8] |= (1 << ((i - 1)% 8));
     }
 	
