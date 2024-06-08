@@ -372,16 +372,16 @@ void write_root_dir_block(int fd)
 	
 	ssize_t bytes_remaining = BLOCK_SIZE;
 
-    struct ext2_dir_entry current = {0}; 
-    dir_entry_set(current, EXT2_ROOT_INO, ".");
-	dir_entry_write(current, fd);
+    struct ext2_dir_entry current_entry = {0}; 
+    dir_entry_set(current_entry, EXT2_ROOT_INO, ".");
+	dir_entry_write(current_entry, fd);
    
    	bytes_remaining -= current_entry.rec_len;
 
-    struct ext2_dir_entry parent = {0};
-    dir_entry_set(parent, EXT2_ROOT_INO, "..");
-    parent.rec_len = bytes_remaining;
-	dir_entry_write(parent, fd);
+    struct ext2_dir_entry parent_entry = {0};
+    dir_entry_set(parent_entry, EXT2_ROOT_INO, "..");
+    parent_entry.rec_len = bytes_remaining;
+	dir_entry_write(parent_entry, fd);
 }
 
 void write_lost_and_found_dir_block(int fd) {
