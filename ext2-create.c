@@ -357,7 +357,7 @@ void write_root_dir_block(int fd)
         errno_exit("lseek");
     }
 
-    struct ext2_dir_entry current = {0}; /
+    struct ext2_dir_entry current = {0}; 
     dir_entry_set(current, EXT2_ROOT_INO, ".");
    
     struct ext2_dir_entry parent = {0};
@@ -365,7 +365,6 @@ void write_root_dir_block(int fd)
 
     parent.rec_len = BLOCK_SIZE - current.rec_len;
 
-    // Write the directory entries to the file
     dir_entry_write(current, fd);
     dir_entry_write(parent, fd);
 }
